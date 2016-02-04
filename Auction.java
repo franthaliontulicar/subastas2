@@ -43,7 +43,7 @@ public class Auction
             System.out.println(lot.toString());
         }
     }
-    
+
     /**
      * Make a bid for a lot.
      * A message is printed indicating whether the bid is
@@ -55,22 +55,25 @@ public class Auction
      */
     public void makeABid(int lotNumber, Person bidder, long value)
     {
+
         Lot selectedLot = getLot(lotNumber);
         if(selectedLot != null) {
             Bid bid = new Bid(bidder, value);
             boolean successful = selectedLot.bidFor(bid);
             if(successful) {
                 System.out.println("The bid for lot number " +
-                                   lotNumber + " was successful.");
+                    lotNumber + " was successful.");
             }
             else {
                 // Report which bid is higher.
                 Bid highestBid = selectedLot.getHighestBid();
                 System.out.println("Lot number: " + lotNumber +
-                                   " already has a bid of: " +
-                                   highestBid.getValue());
+                    " already has a bid of: " +
+                    highestBid.getValue());
+
             }
         }
+
     }
 
     /**
@@ -87,9 +90,9 @@ public class Auction
             // right lot.
             if(selectedLot.getNumber() != lotNumber) {
                 System.out.println("Internal error: Lot number " +
-                                   selectedLot.getNumber() +
-                                   " was returned instead of " +
-                                   lotNumber);
+                    selectedLot.getNumber() +
+                    " was returned instead of " +
+                    lotNumber);
                 // Don't return an invalid lot.
                 selectedLot = null;
             }
@@ -97,8 +100,37 @@ public class Auction
         }
         else {
             System.out.println("Lot number: " + lotNumber +
-                               " does not exist.");
+                " does not exist.");
             return null;
         }
     }
+
+    public void close(){
+        Bid puja;
+        for(Lot lot: lots){
+            puja = lot.getHighestBid();
+            String detalles = lot.getNumber()+" : "+ lot.getDescription();
+            if(puja !=null){
+                detalles = detalles +" Mayor puja"+ lot.getHighestBid().getValue() +" Pujante "+ puja.getBidder().getName();
+            }
+
+            else{
+                detalles = detalles + " No hay pujas ";
+            }
+
+        }
+
+    }
+    public ArrayList<Lot> getUnsold(){
+
+        ArrayList<Lot> sinPuja = new ArrayList<Lot>();
+        for(Lot lot: lots){
+            if(lot.getHighestBid() == null){
+                sinPuja.add(lot);
+            }
+        }
+        
+        return sinPuja;
+    }
+   
 }
