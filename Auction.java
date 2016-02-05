@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * A simple model of an auction.
  * The auction maintains a list of lots of arbitrary length.
  *
- * @author David J. Barnes and Michael KÃ¶lling.
+ * @author David J. Barnes and Michael Kölling.
  * @version 2011.07.31
  */
 public class Auction
@@ -83,26 +83,27 @@ public class Auction
      */
     public Lot getLot(int lotNumber)
     {
+        Lot selectedLot = null;
         if((lotNumber >= 1) && (lotNumber < nextLotNumber)) {
             // The number seems to be reasonable.
-            Lot selectedLot = lots.get(lotNumber - 1);
             // Include a confidence check to be sure we have the
             // right lot.
-            if(selectedLot.getNumber() != lotNumber) {
-                System.out.println("Internal error: Lot number " +
-                    selectedLot.getNumber() +
-                    " was returned instead of " +
-                    lotNumber);
-                // Don't return an invalid lot.
-                selectedLot = null;
+            int index = 0;
+            while((index < lots.size()) && (selectedLot == null)){
+                if(lots.get(index).getNumber()== lotNumber){
+                    selectedLot = lots.get(index);//Si existe devuelve el indice del lot
+                }
+                index++;
             }
-            return selectedLot;
+
         }
-        else {
-            System.out.println("Lot number: " + lotNumber +
-                " does not exist.");
-            return null;
+        if(selectedLot == null){
+            System.out.println("Lote numero "+lotNumber+" no existe");
+
         }
+        return selectedLot;
+
+        
     }
 
     public void close(){
@@ -121,6 +122,7 @@ public class Auction
         }
 
     }
+
     public ArrayList<Lot> getUnsold(){
 
         ArrayList<Lot> sinPuja = new ArrayList<Lot>();
@@ -129,8 +131,21 @@ public class Auction
                 sinPuja.add(lot);
             }
         }
-        
+
         return sinPuja;
     }
-   
+
+    public Lot removeLot(int index){
+        Lot lot = null;
+        int indice = 0;
+        
+        while((indice < lots.size()) && (lot == null)){
+            if(lots.get(indice).getNumber() == index){
+                lot = lots.remove(indice);
+            
+            }
+            indice++;
+        }
+        return lot;
+    }
 }
